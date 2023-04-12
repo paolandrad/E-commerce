@@ -1,91 +1,114 @@
-# E-commerce
-Criação do banco de dados para o cenário de E-commerce
+# Criação do banco de dados para o cenário de E-commerce
 
-# E-Commerce Database Management System
-
-As a part of our University Curriculum, we made this project for Database Management Systems (DBMS) - COMP 213. This project contains theoretical as well as implementation in SQL. If you liked the repo do star it.
+Como parte do meu Currículo Profissional, elaborei este projeto para Sistemas de Gerenciamento de Banco de Dados (DBMS) - COMP 213. Este projeto contém tanto a parte teórica quanto a implementação em SQL. Se você gostou do repo, dê uma estrela nele.
 
 ## Pre-requisite
 
 Microsoft SQL Server
 
-## Contents
-- Description
-- Basic Structure
-    - Entity Relation Diagram (ERD)
-    - Relational Database Schema
-- Implementation
-    - Creating Tables
-    - Inserting Data
-- Queries
+## Conteúdo
+- Descrição
+- Estrutura básica
+    - Diagrama de Entidade Relação (EER)
+    - Esquema de banco de dados relacional
+- Implementação
+    - Criando Tabelas
+    - Inserindo Dados
+- Consultas
 
-## 1. Description
+## 1. Descrição
 
-E-Commerce Database Management System (EC-DBMS) is a system that is designed to store, process, retrieve and analyze information concerned with the administrative and management of sales activity done by a customer online sitting at home. This project aims at maintaining all the information pertaining to the customers, vendors, products, and their categories, orders, and couriers. It enables vendors to set up online shops, customers to browse through the shops, and a system administrator to approve and reject requests for new shops and maintain lists of shop categories. The system manages the items in the shop and also helps customers purchase them online without having to visit the shop physically. The online shopping system will use the internet as the sole method for selling goods, products, and services to its consumers. The website will show all products in a categorized manner. Customers can browse any product for its price, other details and can order the product by using their registered account. The customer has to pay the order amount at the time of delivery.
+O Sistema de gerenciamento de banco de dados de comércio eletrônico (EC-DBMS) é um sistema projetado para armazenar, processar, recuperar e analisar informações relacionadas à administração e gerenciamento de atividades de vendas feitas por um cliente on-line sentado em casa. Este projeto visa manter todas as informações pertencentes aos clientes, fornecedores, produtos e suas categorias, pedidos e correios. Ele permite que os fornecedores configurem lojas online, os clientes naveguem pelas lojas e um administrador do sistema aprove e rejeite solicitações de novas lojas e mantenha listas de categorias de lojas. O sistema gerencia os itens da loja e também ajuda os clientes a comprá-los online sem precisar se deslocar fisicamente à loja. O sistema de compras online utilizará a internet como único meio de venda de bens, produtos e serviços aos seus consumidores. O site mostrará todos os produtos de forma categorizada. Os clientes podem pesquisar qualquer produto por seu preço, outros detalhes e podem solicitar o produto usando sua conta registrada. O cliente deve pagar o valor do pedido no momento da entrega.
 
-## 2. Basic Structure
-2.1 Entity Relation Diagram (ERD)
-![alt text](Images/ERD.jpeg)
+## 2. Estrutura Básica
 
-2.2 Relational Database Schema
-![alt text](Images/DatabaseSchema.png)
+2.1 Relational Database Schema
+![alt text](https://github.com/paolandrad/E-commerce/blob/main/Diagrama%20EER/EER%20Diagram.png)
 
-## 3. Implementation
-3.1 Creating Tables
+## 3. Implementação
+3.1 Criando Tabelas
 
-Complete script is available in `Database & Table Creation` folder.
+O script completo está disponível na Database & Table Creationpasta.
 
 ```sql
-CREATE DATABASE OnlineShopping;
+create database ecommerce;
+use ecommerce;
 
-Use OnlineShopping;
+ -- criar tabela client 
+ 
+ create table clients(
+        idClient int auto_increment primary key, 
+        Fname varchar(10),
+        Minit char(3),
+        Lname varchar(20),
+        CPF char(11) not null ,
+        Address varchar(30),
+        constraint unique_cpf_client unique (CPF)
+ );
+ 
+-- criar tabela produto
 
-CREATE TABLE Customer
-(
-	CustomerID int IDENTITY(1, 1) PRIMARY KEY,
-	FirstName varchar(255) NOT NULL,
-	LastName varchar(255) NOT NULL,
-	DOB date NOT NULL,
-	Email varchar(255) NOT NULL,
-	Password varchar(255) NOT NULL,
-	Contact varchar(255) NOT NULL
+-- size = dimenção do produto 
+ create table product(
+        idProduct int auto_increment primary key, 
+        Pname varchar(10) not null,
+        classification_kids bool default false,
+        category enum('Eletrônico','Vestimenta','Brinquedos','Alimentos','Móveis') not null,
+        avaliação float default 0, 
+        size varchar(10), 
+        constraint unique_cpf_client unique (CPF)
 );
 
-CREATE TABLE Country
-(
-	CountryID int IDENTITY(1, 1) PRIMARY KEY,
-	CountryName varchar(255) NOT NULL
-);
 
-CREATE TABLE Province
-(
-	ProvinceID int IDENTITY(1, 1) PRIMARY KEY,
-	ProvinceName varchar(255) NOT NULL
-);
+-- para ser continuado no desafio termine de implementar a tabela e crie a conexão com as tabelas necessárias
+-- além disso, reflita essa modificação no diagrama de esquema relacional 
+-- criar constraints relacionadas ao pagamento 
+create table payments(
+	   idclient int,
+       idPayment int,
+       typePayment enum('Boleto','Cartão','Dois cartões'),
+       limitAvailable float,
+       primary key(idClient, id_payment)
+); 
 
-CREATE TABLE City
-(
-	CityID int IDENTITY(1, 1) PRIMARY KEY,
-	CityName varchar(255) NOT NULL
-);
 
-CREATE TABLE ZipCode
-(
-	ZipCodeID int IDENTITY(1, 1) PRIMARY KEY,
-	CityID int FOREIGN KEY REFERENCES City(CityID) NOT NULL,
-	ProvinceID int FOREIGN KEY REFERENCES Province(ProvinceID) NOT NULL,
-	CountryID int FOREIGN KEY REFERENCES Country(CountryID) NOT NULL
-);
+ -- criar tabela pedido
+ 
+ create table orders(
+         idOrder int auto_increment primary key,
+         idOrderCliente int,
+         orderStatus enum('Cancelado','Comfirmado','Em processamento') default 'Em processamento',
+         orderDescription varchar(255),
+         sendValue float default 10,
+         paymentCash bool default false,
+         idPayment ....
+         constraint fk_ordes_client foreign key (idOrderClient) references clients(idClient) 
+         );
+         
+ -- criar tabela estoque
+create table productStorage(
+         idProdStorage int auto_increment primary key,
+         storageLocation varchar(255),
+         quantity int default 0
+         );
 
-CREATE TABLE Address
-(
-	AddressID int IDENTITY(1, 1) PRIMARY KEY,
-	HouseNo varchar(255) NOT NULL,
-	Street int NOT NULL,
-	CustomerID int FOREIGN KEY REFERENCES Customer(CustomerID) NOT NULL,
-	ZipCodeID int FOREIGN KEY REFERENCES ZipCode(ZipCodeID) NOT NULL,
-	Area varchar(255) NOT NULL
-);
+ -- criar tabela fornecedor
+create table supplier(
+         idSupplier int auto_increment primary key,
+         SocialName varchar(255) not null,
+         CNPJ char(15) not null,
+         contact varchar(11) not null,
+          constraint unique_supplier unique (CNPJ)
+         );
+
+ -- criar tabela vendedor
+create table supplier(
+         idSupplier int auto_increment primary key,
+         SocialName varchar(255) not null,
+         CNPJ char(15) not null,
+         contact varchar(11) not null,
+          constraint unique_supplier unique (CNPJ)
+         );
 ```
 
 3.2 Inserting Data
