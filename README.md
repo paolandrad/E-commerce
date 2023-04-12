@@ -111,11 +111,11 @@ create table supplier(
          );
 ```
 
-3.2 Inserting Data
+3.2 Inserindo Dados
 
-Complete scripts are available in `Data Insertion` folder.
+Os scripts completos estão disponíveis na Data Insertionpasta.
 
-Note: All information is fake and generated for the demonstration of the project.
+Obs: Todas as informações são falsas e geradas para demonstração do projeto.
 
 ```sql
 use OnlineShopping;
@@ -133,36 +133,31 @@ Insert Into Province Values ('Punjab');
 Insert Into Review Values ('4','Great Product Slow delivery. Such slow much wow','1','1');
 ```
 
-## 4. Queries
+## 4. Consultas
 
-Complete scripts are available in `Queries` folder.
+Os scripts completos estão disponíveis na `Queries` pasta.
 
-### A particular vendor's categories of products he's selling
+### As categorias de produtos de um determinado fornecedor que ele está vendendo
 
 ```sql
 select CategoryName
 from Category
 where CategoryID in
-					(select Distinct CategoryID
-					from Product
-					where ProductID in
-									(select ProductID
-									from VendorProduct
-									where VendorID='3'));
+				(select Distinct CategoryID
+				from Product
+				where ProductID in
+								(select ProductID
+								from VendorProduct
+								where VendorID='3'));
 ```
 
-### Average Age of Customers
+### Idade Média dos Clientes
 
 ```sql
 select sum(DATEDIFF ( year , customer.DOB , getdate() ))/Count(customerid) as "Average Age"
 from Customer
 ```
 
-# Contributors
 
-Do check the contributors to follow some awesome projects
 
-- [@mohammadusman666](https://github.com/mohammadusman666)
-- [@abeer04](https://github.com/abeer04)
-
-`Feel free to fork the repository and contribute to this project.`
+`Sinta-se à vontade para bifurcar o repositório e contribuir com este projeto..`
